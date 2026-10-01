@@ -12,7 +12,7 @@
 | Grafy (dočasné HTML) | `%TEMP%\dbviewer_*` (staršie ako 7 dní sa mažú samé) | `/tmp/dbviewer_*` |
 
 Potrebné balíky: `pandas`, `numpy`, `plotly`, `tkinter` (súčasť Pythonu). Voliteľne `openpyxl` (len export do XLSX).
-Otestované: Python 3.10 – 3.13, pandas 2.2 a 3.0.
+Otestované: Python 3.10 – 3.13, pandas 1.5 (Debian 12), 2.2 a 3.0, plotly 5.4 – 7.
 
 ---
 
@@ -55,9 +55,17 @@ Env (`Dev\Env\Personal`) **nezálohuj**. Env sa nedá presunúť, vždy sa robí
 
 ```
 mkdir -p ~/Tools && cp -r DBViewer ~/Tools/
+sudo apt-get update
 sudo apt install python3-tk python3-pandas python3-plotly python3-openpyxl   # alebo pip do venv
 sh ~/Tools/DBViewer/install_linux.sh
 ```
+
+| Hláška pri `apt` | Príčina | Riešenie |
+|---|---|---|
+| `404 Not Found` pri sťahovaní balíka | starý zoznam balíkov (Debian medzitým vydal novšie verzie) | `sudo apt-get update`, potom inštaláciu zopakuj |
+| `Operace zamítnuta` / `Permission denied` pri `/var/lib/apt/...` | chýba `sudo` | `sudo apt-get update` |
+
+Debian 12 má pandas 1.5 a plotly 5.4. Viewer s nimi funguje (od verzie z 1. 10. 2026, staršia verzia s pandas 1.5 nerozpoznala čas).
 Skript skontroluje balíky a vytvorí spúšťač v menu aj na ploche. Ak GNOME pri prvom spustení z plochy zobrazí upozornenie: pravý klik → *Povoliť spúšťanie*.
 Ak používaš venv, spusti skript s aktivovaným venv (`source venv/bin/activate`). Skript zapíše ten Python, ktorý nájde ako `python3`.
 

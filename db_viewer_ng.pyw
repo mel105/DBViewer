@@ -204,12 +204,17 @@ def to_numeric(s: pd.Series) -> pd.Series:
     return pd.to_numeric(s, errors="coerce")
 
 
+_PANDAS_MAJOR = int(pd.__version__.split(".")[0])
+
+
 def _parse_datetime_text(s: pd.Series) -> pd.Series:
     txt = s.astype("string")
-    try:
-        return pd.to_datetime(txt, errors="coerce", format="ISO8601")
-    except (TypeError, ValueError):
-        return pd.to_datetime(txt, errors="coerce")
+    if _PANDAS_MAJOR >= 2:     # pandas 1.x (Debian 12) "ISO8601" nepozná -> všetko NaT
+        try:
+            return pd.to_datetime(txt, errors="coerce", format="ISO8601")
+        except (TypeError, ValueError):
+            pass
+    return pd.to_datetime(txt, errors="coerce")
 
 
 def looks_like_datetime_text(s: pd.Series) -> bool:
